@@ -1,11 +1,27 @@
-import { FC, useContext } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import { ChangeEvent, FC, useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import UserModel from "@/models/User";
+import { randomId } from "@/utils/randomId";
 
-interface AddNewUserBlockProps {}
+interface AddNewUserBlockProps {
+  state: any;
+}
 
-const AddNewUserBlock: FC<AddNewUserBlockProps> = () => {
-  conts ctx = useContext()
+const AddNewUserBlock: FC<AddNewUserBlockProps> = ({ state }) => {
+  const [newUserName, setNewUserName] = useState("");
+  const handleAddUser = () => {
+    const newUser = UserModel.create({
+      id: randomId(),
+      name: newUserName,
+      email: "",
+      phone: "",
+      website: "",
+      isBlocked: false,
+    });
+    state.addUser(newUser);
+    setNewUserName("");
+  };
 
   return (
     <>
@@ -13,7 +29,9 @@ const AddNewUserBlock: FC<AddNewUserBlockProps> = () => {
         <Input
           type="text"
           value={newUserName}
-          onChange={(e) => setNewUserName(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setNewUserName(e.target.value)
+          }
         />
         <Button variant="secondary" onClick={handleAddUser}>
           Add User
