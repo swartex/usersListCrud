@@ -1,27 +1,26 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { Button } from "./button";
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { Button } from './button';
 
-describe("Button", () => {
-  it("renders", () => {
-    const { asFragment } = render(<Button>test</Button>);
-
+describe('Button component', () => {
+  it('renderes default button', () => {
+    const { asFragment } = render(<Button>Default button</Button>);
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it("renders ghost button", () => {
-    const { asFragment} = render(<Button variant="ghost">test1</Button>);
+  it('renders a small destructive button', () => {
+    render(<Button size="sm" variant="destructive">Destructive</Button>);
     const button = screen.getByRole('button');
 
-    expect(button).toBeInTheDocument();
-    expect(asFragment()).toMatchSnapshot();
+    expect(button).toHaveTextContent('Destructive');
+    expect(button).toHaveClass('h-9 rounded-md px-3');
+    expect(button).toHaveClass('bg-destructive text-destructive-foreground');
   });
 
-  it('render small button', () => {
-    render(<Button size="sm" variant="destructive">Button text</Button>);
-    const button = screen.findByRole('button');
+  it('renders button with type icon', () => {
+    render(<Button data-testid="icon-button"  size="icon">Icon</Button>);
+    const button = screen.getByTestId('icon-button');
 
-    waitFor(() => {
-      console.log(button)
-    })
-  })
+    expect(button).toHaveClass('w-10 h-10');
+  });
 });
