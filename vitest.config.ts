@@ -6,6 +6,14 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: "./setup-test.ts",
+    coverage: {
+      enabled: true,
+      reporter: ['html'],
+      thresholds: {
+        functions: 95,
+        branches: 70,
+      }
+    },
   },
   resolve: {
     alias: {
