@@ -1,27 +1,43 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { Button } from "./button";
+import { render } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { Button, ButtonProps } from './button';
 
-describe("Button", () => {
-  it("renders", () => {
-    const { asFragment } = render(<Button>test</Button>);
+describe('Button component', () => {
+  const setup = ({ ...props }: ButtonProps = {}) => {
+    return render(
+      <Button data-testid='button' {...props}>
+        Button
+      </Button>
+    );
+  };
 
+  it('should render default button', () => {
+    const { asFragment } = setup();
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it("renders ghost button", () => {
-    const { asFragment} = render(<Button variant="ghost">test1</Button>);
-    const button = screen.getByRole('button');
+  it('should render destructive button', () => {
+    const { getByTestId } = setup({
+      variant: 'destructive',
+    });
+
+    const button = getByTestId('button');
+
+    expect(button).toHaveClass(
+      'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+    );
+  });
+
+  it('should render button asChild', () => {
+    const { getByTestId } = render(
+      <Button asChild data-testid="custom-button">
+        <a href='/test'>Custom Link</a>
+      </Button>
+    );
+
+    const button = getByTestId('custom-button');
 
     expect(button).toBeInTheDocument();
-    expect(asFragment()).toMatchSnapshot();
+    expect(button).toHaveAttribute('href', '/test');
   });
-
-  it('render small button', () => {
-    render(<Button size="sm" variant="destructive">Button text</Button>);
-    const button = screen.findByRole('button');
-
-    waitFor(() => {
-      console.log(button)
-    })
-  })
 });
